@@ -33,10 +33,10 @@ pipeline {
     stage('Creating and Running the Applications.') {
       steps {
 	  sh'''
-	  usr/bin/ansible-playbook -i /opt/inventory.ini firewall.yaml
-	  usr/bin/ansible-playbook -i /opt/inventory.ini ufw.yaml
-	  usr/bin/ansible-playbook -i /opt/inventory.ini netdata.yaml
-	  usr/bin/ansible-playbook -i /opt/inventory.ini nginx.yaml 
+	  /usr/bin/ansible-playbook -i /opt/inventory.ini firewall.yaml
+	  /usr/bin/ansible-playbook -i /opt/inventory.ini ufw.yaml
+	  /usr/bin/ansible-playbook -i /opt/inventory.ini netdata.yaml
+	  /usr/bin/ansible-playbook -i /opt/inventory.ini nginx.yaml 
 	  '''
 	    }
 
