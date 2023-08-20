@@ -7,7 +7,7 @@ pipeline {
    stage('download the files') {
     steps {
 	
-	git branch: 'main', credentialsId: 'git-access', url: 'https://github.com/alagurajmathialagan/assignment.git'
+	git branch: 'main', credentialsId: 'git-access', url: 'https://github.com/alagurajmathilagan/assignment.git'
 	
 	}
 }
