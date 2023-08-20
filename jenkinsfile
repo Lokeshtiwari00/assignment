@@ -16,7 +16,7 @@ pipeline {
 	 sh'''     
          /usr/bin/terraform init
 	 /usr/bin/terraform apply --auto-approve
-	 sleep 30
+	 sleep 60
 	 echo "backend_ip:" > /opt/vari.yaml
      sed -i "/backend_ip:/ s/$/ $(terraform output -raw backend_ip)/" /opt/vari.yaml
 	 '''
