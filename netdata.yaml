@@ -1,0 +1,19 @@
+---
+- name: Install and Configure Netdata
+  hosts: backend
+  tasks:
+    - name: Install required packages
+      apt:
+       name: [netdata]
+       state: present
+       update_cache: yes
+    - name: Change Bind IP
+      replace:
+       path: /etc/netdata/netdata.conf
+       regexp: 'bind socket to IP = 127.0.0.1'
+       replace: 'bind socket to IP = 0.0.0.0'
+    - name: Enable and start Netdata service
+      systemd:
+       name: netdata
+       enabled: yes
+       state: restarted

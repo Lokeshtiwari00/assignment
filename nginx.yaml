@@ -1,0 +1,20 @@
+---
+- name: Install and configure Nginx
+  hosts: frontend
+  vars_files:
+    - /opt/vari.yaml
+  tasks:
+   - name: Install Nginix
+     yum:
+      name: nginx
+      state: latest
+   - name: Configure Nginix
+     template:
+      src: nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+     notify: Restart Nginx
+  handlers:
+   - name: Restart Nginx
+     systemd:
+       name: nginx
+       state: restarted

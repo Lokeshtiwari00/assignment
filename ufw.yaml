@@ -1,0 +1,9 @@
+---
+- name: Disable SE
+  hosts: backend
+  tasks:
+   - name: Stop and disable the Firewall in Centos
+     systemd:
+      name: ufw
+      state: stopped
+      enabled: no

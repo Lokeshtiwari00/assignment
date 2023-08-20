@@ -1,0 +1,53 @@
+pipeline {
+
+   agent any
+   
+   stages {
+   
+   stage('download the files') {
+    steps {
+	
+	git branch: 'main', credentialsId: 'git-access', url: 'https://github.com/alagurajm/assignment.git'
+	
+	}
+   stage('Launching 2 VMs') {
+    steps {
+	 sh'''     
+         /usr/bin/terraform init
+	 /usr/bin/terraform apply --auto-approve
+	 sleep 30
+	 echo "backend_ip:" > /opt/vari.yaml
+     sed -i "/backend_ip:/ s/$/ $(terraform output -raw backend_ip)/" /opt/vari.yaml
+	 '''
+	}
+   
+   }
+   stage('Creating Inventory') {
+    steps {
+	 sh'''
+        echo "[frontend]" > /opt/inventory.ini 
+        /usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=c8.local" --query "Reservations[].Instances[].PublicIpAddress" --output=text >> /opt/inventory.ini
+		sed -i 's/^\([0-9.]*\)$/\1 ansible_ssh_user=root ansible_ssh_pass=redhat/' /opt/inventory.ini
+		echo "[backend]" >> /opt/inventory.ini
+		/usr/local/bin/aws ec2 describe-instances --filters "Name=tag:Name,Values=u21.local" --query "Reservations[].Instances[].PublicIpAddress" --output=text >> /opt/inventory.ini
+		sed -i 's/^\([0-9.]*\)$/\1 ansible_ssh_user=root ansible_ssh_pass=redhat/' /opt/inventory.ini
+	 '''
+	   }
+     }
+    stage('Creating and Running the Applications.') {
+      steps {
+	  sh'''
+	  usr/bin/ansible-playbook -i /opt/inventory.ini firewall.yaml
+	  usr/bin/ansible-playbook -i /opt/inventory.ini ufw.yaml
+	  usr/bin/ansible-playbook -i /opt/inventory.ini netdata.yaml
+	  usr/bin/ansible-playbook -i /opt/inventory.ini nginx.yaml 
+	  '''
+	    }
+
+      }
+	
+   }
+   
+   }
+
+}
