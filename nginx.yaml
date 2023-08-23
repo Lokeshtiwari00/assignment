@@ -4,6 +4,11 @@
   vars_files:
     - /opt/vari.yaml
   tasks:
+   - name: Disable the Repo
+     replace:
+      path: /etc/yum.repos.d/redhat-rhui-client-config.repo
+      regexp: 'enabled=1'
+      replace: 'enabled=0'
    - name: Install Nginix
      yum:
       name: nginx
