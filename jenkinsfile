@@ -14,7 +14,7 @@ pipeline {
    stage('Launching 2 VMs') {
     steps {
 	 sh'''    
-         /usr/bin/terraform destroy 
+         /usr/bin/terraform destroy --auto-approve 
          /usr/bin/terraform init
 	 /usr/bin/terraform apply --auto-approve
 	 sleep 60
